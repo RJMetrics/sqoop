@@ -1,3 +1,4 @@
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -148,10 +149,18 @@ public class JdbcExportJob extends ExportJobBase {
         colNames = mgr.getColumnNames(tableName);
       }
 
+      String[] sqlColNames;
+      if (null != colNames) {
+          sqlColNames = new String[colNames.length];
+          for (int i = 0; i < colNames.length; i++) {
+              sqlColNames[i] = mgr.escapeColName(colNames[i]);
+          }
+      }
+
       if (mgr.escapeTableNameOnExport()) {
-        DBOutputFormat.setOutput(job, mgr.escapeTableName(tableName), colNames);
+        DBOutputFormat.setOutput(job, mgr.escapeTableName(tableName), sqlColNames);
       } else {
-        DBOutputFormat.setOutput(job, tableName, colNames);
+        DBOutputFormat.setOutput(job, tableName, sqlColNames);
       }
 
       job.setOutputFormatClass(getOutputFormatClass());
