@@ -150,11 +150,9 @@ public class JdbcExportJob extends ExportJobBase {
       }
 
       String[] sqlColNames;
-      if (null != colNames) {
-          sqlColNames = new String[colNames.length];
-          for (int i = 0; i < colNames.length; i++) {
-              sqlColNames[i] = mgr.escapeColName(colNames[i]);
-          }
+      sqlColNames = new String[colNames.length];
+      for (int i = 0; i < colNames.length; i++) {
+          sqlColNames[i] = mgr.escapeColName(colNames[i]);
       }
 
       if (mgr.escapeTableNameOnExport()) {
