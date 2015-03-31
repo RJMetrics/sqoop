@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -859,14 +860,17 @@ public class SqoopOptions implements Cloneable {
   }
 
   /**
-   * Reset the nonce directory and force a new one to be generated. This
-   * method is intended to be used only by multiple unit tests that want
-   * to isolate themselves from one another. It should not be called
-   * during normal Sqoop execution.
+   * Reset the nonce directory, deleting its contents; this will force a new
+   * directory to be created by the next call to {@link #getNonceJarDir}. This
+   * method is used by unit tests that need isolation, as well as for cleanup 
+   * after a normal run.
    */
   public static void clearNonceDir() {
-    LOG.warn("Clearing nonce directory");
-    SqoopOptions.curNonce = null;
+    if (SqoopOptions.curNonce != null) {
+      LOG.info("Clearing nonce directory: " + SqoopOptions.curNonce);
+      FileUtils.deleteQuietly(new File(SqoopOptions.curNonce));
+      SqoopOptions.curNonce = null;
+    }
   }
 
   public static String getHiveHomeDefault() {
