@@ -215,8 +215,12 @@ public class Sqoop extends Configured implements Tool {
 
 
     Sqoop sqoop = new Sqoop(tool, pluginConf);
-    return runSqoop(sqoop,
-        Arrays.copyOfRange(expandedArgs, 1, expandedArgs.length));
+    try {
+      return runSqoop(sqoop, Arrays.copyOfRange(expandedArgs, 1, expandedArgs.length));
+    }
+    finally {
+      org.apache.sqoop.SqoopOptions.clearNonceDir();
+    }
   }
 
   /**
